@@ -336,6 +336,7 @@ export default withNextIntl(nextConfig);
 ```tsx
 // app/[locale]/layout.tsx
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
+import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import '../globals.css';
@@ -355,6 +356,7 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+  setRequestLocale(locale);
 
   return (
     <html lang={locale}>
@@ -366,11 +368,17 @@ export default async function LocaleLayout({
 }
 ```
 
+`setRequestLocale(locale)` is required — without it, next-intl opts every page under this layout into dynamic (per-request) rendering even though `generateStaticParams` is present. This is next-intl's own documented requirement (a "temporary API" per their docs, called in every layout/page you want statically rendered), not optional boilerplate.
+
 - [ ] **Step 11: Add a temporary placeholder Home page so the build can succeed end to end**
 
 ```tsx
 // app/[locale]/page.tsx
-export default function HomePage() {
+import { setRequestLocale } from 'next-intl/server';
+
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   return <main>placeholder — replaced in Task 5</main>;
 }
 ```
@@ -378,7 +386,7 @@ export default function HomePage() {
 - [ ] **Step 12: Run the build to verify locale routing works**
 
 Run: `npm run build`
-Expected: build succeeds, output lists static routes for `/`, `/en`, `/ru`, `/de` (check the route table in the build output for these four).
+Expected: build succeeds. Check the build's route table (or `.next/prerender-manifest.json`'s `routes` key) for `/`, `/en`, `/ru`, `/de` appearing as prerendered/static routes, not just the default `/_not-found`/`/_global-error` fallbacks — that's the concrete evidence `setRequestLocale` worked, not just that the build didn't crash.
 
 - [ ] **Step 13: Commit**
 
@@ -793,6 +801,7 @@ export function Footer() {
 ```tsx
 // app/[locale]/layout.tsx
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
+import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { Nav } from '@/components/Nav';
@@ -815,6 +824,7 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+  setRequestLocale(locale);
 
   return (
     <html lang={locale}>
@@ -959,12 +969,14 @@ subhead: >-
 
 ```tsx
 // app/[locale]/page.tsx
+import { setRequestLocale } from 'next-intl/server';
 import { getHomeContent } from '@/lib/content';
 import { Hero } from '@/components/Hero';
 import type { Locale } from '@/lib/content';
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const content = await getHomeContent(locale);
   return <Hero content={content} />;
 }
@@ -1188,12 +1200,14 @@ sections:
 
 ```tsx
 // app/[locale]/about/page.tsx
+import { setRequestLocale } from 'next-intl/server';
 import { getPageContent } from '@/lib/content';
 import { ProsePage } from '@/components/ProsePage';
 import type { Locale } from '@/lib/content';
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const content = await getPageContent(locale, 'about');
   return <ProsePage content={content} />;
 }
@@ -1352,12 +1366,14 @@ sections:
 
 ```tsx
 // app/[locale]/methodology/page.tsx
+import { setRequestLocale } from 'next-intl/server';
 import { getPageContent } from '@/lib/content';
 import { ProsePage } from '@/components/ProsePage';
 import type { Locale } from '@/lib/content';
 
 export default async function MethodologyPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const content = await getPageContent(locale, 'methodology');
   return <ProsePage content={content} />;
 }
@@ -1495,12 +1511,14 @@ sections:
 
 ```tsx
 // app/[locale]/research/page.tsx
+import { setRequestLocale } from 'next-intl/server';
 import { getPageContent } from '@/lib/content';
 import { ProsePage } from '@/components/ProsePage';
 import type { Locale } from '@/lib/content';
 
 export default async function ResearchPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const content = await getPageContent(locale, 'research');
   return <ProsePage content={content} />;
 }
@@ -1634,12 +1652,14 @@ sections:
 
 ```tsx
 // app/[locale]/programs/page.tsx
+import { setRequestLocale } from 'next-intl/server';
 import { getPageContent } from '@/lib/content';
 import { ProsePage } from '@/components/ProsePage';
 import type { Locale } from '@/lib/content';
 
 export default async function ProgramsPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const content = await getPageContent(locale, 'programs');
   return <ProsePage content={content} />;
 }
@@ -1762,12 +1782,14 @@ sections:
 
 ```tsx
 // app/[locale]/contact/page.tsx
+import { setRequestLocale } from 'next-intl/server';
 import { getPageContent } from '@/lib/content';
 import { ProsePage } from '@/components/ProsePage';
 import type { Locale } from '@/lib/content';
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const content = await getPageContent(locale, 'contact');
   return <ProsePage content={content} />;
 }
@@ -1988,12 +2010,14 @@ export function CatalogueGrid({ works }: { works: CatalogueWork[] }) {
 
 ```tsx
 // app/[locale]/collection/page.tsx
+import { setRequestLocale } from 'next-intl/server';
 import { getCatalogueWorks } from '@/lib/content';
 import { CollectionBrowser } from './CollectionBrowser';
 import type { Locale } from '@/lib/content';
 
 export default async function CollectionPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const works = await getCatalogueWorks(locale);
   return <CollectionBrowser works={works} />;
 }
