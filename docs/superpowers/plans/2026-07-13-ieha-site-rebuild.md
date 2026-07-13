@@ -79,8 +79,10 @@ Each content page is one Keystatic singleton per (page × locale) — 24 singlet
 cd /Users/dcshch/Sites/artscion-ieha
 npm init -y
 npm install next@16.2.10 react@latest react-dom@latest
-npm install -D typescript @types/node @types/react @types/react-dom tailwindcss@4.3.2 @tailwindcss/postcss vitest @vitejs/plugin-react jsdom @testing-library/react @testing-library/jest-dom
+npm install -D typescript@5 @types/node @types/react @types/react-dom tailwindcss@4.3.2 @tailwindcss/postcss vitest @vitejs/plugin-react jsdom @testing-library/react @testing-library/jest-dom
 ```
+
+**Pin `typescript@5`, not latest.** `typescript` shipped a major version 7 (a Go-native compiler rewrite) that is currently incompatible with Next.js 16.2.10's build tooling — an unpinned install crashes `next build` with `The "id" argument must be of type string. Received undefined` after the TypeScript phase, which is easy to mistake for a config bug. Confirmed during Task 1 execution: pinning to `typescript@5` (resolved `5.9.3` at the time) fixes it.
 
 - [ ] **Step 2: Add package.json scripts**
 
@@ -185,7 +187,7 @@ node_modules/
 - [ ] **Step 9: Verify the project builds**
 
 Run: `npm run build`
-Expected: Build fails with "no pages found" or similar — this is expected since there's no `app/[locale]/page.tsx` yet. Confirm the failure is specifically about missing routes, not a config/syntax error (read the error output).
+Expected: build succeeds (Next.js 16 treats an app with no page routes as valid — it emits only a bare `/404`). Confirm the route table shows no real routes yet (there's no `app/[locale]/page.tsx` until Task 2), and that there's no error output — a crash at this step means something in the scaffold itself is wrong, not that routes are missing.
 
 - [ ] **Step 10: Commit**
 
