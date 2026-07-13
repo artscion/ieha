@@ -435,7 +435,7 @@ const PAGE_SLUGS = ['about', 'methodology', 'research', 'programs', 'contact'] a
 function homeSingleton(locale: string) {
   return singleton({
     label: `Home (${locale})`,
-    path: `content/pages/home/${locale}`,
+    path: `content/pages/home/${locale}/`,
     schema: {
       eyebrow: fields.text({ label: 'Eyebrow' }),
       headline: fields.text({ label: 'Headline' }),
@@ -447,7 +447,7 @@ function homeSingleton(locale: string) {
 function prosePageSingleton(slug: string, locale: string) {
   return singleton({
     label: `${slug} (${locale})`,
-    path: `content/pages/${slug}/${locale}`,
+    path: `content/pages/${slug}/${locale}/`,
     schema: {
       title: fields.text({ label: 'Title' }),
       lead: fields.text({ label: 'Lead', multiline: true }),
