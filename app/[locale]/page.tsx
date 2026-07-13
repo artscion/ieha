@@ -1,7 +1,11 @@
 import { setRequestLocale } from 'next-intl/server';
+import { getHomeContent } from '@/lib/content';
+import { Hero } from '@/components/Hero';
+import type { Locale } from '@/lib/content';
 
-export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <main>placeholder — replaced in Task 5</main>;
+  const content = await getHomeContent(locale);
+  return <Hero content={content} />;
 }
