@@ -1,7 +1,11 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+  images: {
+    localPatterns: [{ pathname: '/catalogue/**' }],
+  },
+};
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 export default withNextIntl(nextConfig);
