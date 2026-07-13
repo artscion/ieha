@@ -25,6 +25,7 @@
   "homepage": "https://github.com/artscion/ieha#readme",
   "dependencies": {
     "next": "^16.2.10",
+    "next-intl": "^4.13.2",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
