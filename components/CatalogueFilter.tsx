@@ -25,7 +25,7 @@ export function CatalogueFilter({
         aria-label="Filter by artist"
         value={artist}
         onChange={(e) => handleChange(e.target.value)}
-        className="mt-1 block border-b border-border bg-transparent font-serif text-ink focus:border-forest focus:outline-none"
+        className="mt-1 block border-b border-border bg-transparent font-serif text-ink focus:border-forest focus:outline-none focus-visible:ring-2 focus-visible:ring-forest/60 focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
       >
         <option value="">All artists</option>
         {artists.map((a) => (

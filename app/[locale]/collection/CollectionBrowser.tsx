@@ -8,8 +8,8 @@ export function CollectionBrowser({ works }: { works: CatalogueWork[] }) {
   const [filtered, setFiltered] = useState(works);
 
   return (
-    <main className="mx-auto max-w-[1100px] px-10 py-16">
-      <h1 className="font-serif text-4xl text-ink">Collection</h1>
+    <main id="main-content" className="mx-auto max-w-[1100px] px-6 py-16 sm:px-10">
+      <h1 className="text-balance font-serif text-4xl text-ink">Collection</h1>
       <div className="mt-8 max-w-xs">
         <CatalogueFilter works={works} onFilteredChange={setFiltered} />
       </div>

@@ -10,7 +10,14 @@ export function CatalogueGrid({ works }: { works: CatalogueWork[] }) {
     <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
       {works.map((work) => (
         <figure key={work.slug} className="border-t border-border pt-4">
-          <Image src={work.image} alt={work.title} width={400} height={400} className="w-full object-cover" />
+          <Image
+            src={work.image}
+            alt={`${work.artist} — ${work.title}, ${work.medium}`}
+            width={800}
+            height={800}
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="h-auto w-full"
+          />
           <figcaption className="mt-3">
             <p className="font-serif text-ink">
               {work.artist} — {work.title}
