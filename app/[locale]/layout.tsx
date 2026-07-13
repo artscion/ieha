@@ -2,6 +2,9 @@ import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import { Nav } from '@/components/Nav';
+import { Footer } from '@/components/Footer';
+import type { Locale } from '@/lib/content';
 import '../globals.css';
 
 export function generateStaticParams() {
@@ -24,7 +27,11 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <Nav locale={locale as Locale} />
+          {children}
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );
