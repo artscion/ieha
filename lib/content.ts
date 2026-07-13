@@ -37,6 +37,43 @@ const CAPTION_FIELD: Record<Locale, 'caption_fr' | 'caption_en' | 'caption_ru' |
   de: 'caption_de',
 };
 
+// Keystatic's reader returns the bare stored filename for an image field
+// (e.g. "work.jpg"), not the served URL. Prepend the field's configured
+// publicPath ('/catalogue/') so it resolves as a static asset.
+const CATALOGUE_PUBLIC_PATH = '/catalogue/';
+function catalogueImageUrl(image: string | null | undefined): string {
+  if (!image) return '';
+  if (image.startsWith('/') || image.startsWith('http')) return image;
+  return `${CATALOGUE_PUBLIC_PATH}${image}`;
+}
+
+export type FeaturedWork = {
+  image: string;
+  artist: string;
+  title: string;
+  date: string;
+  medium: string;
+  caption: string;
+};
+
+// A single catalogue work chosen as the homepage hero feature. Read directly
+// by slug and NOT gated on reviewStatus — this is a curated art-direction
+// choice, distinct from the /collection listing (which only shows approved
+// works). Returns null if the slug or its image is missing, so the hero
+// degrades to text-only rather than throwing.
+export async function getFeaturedWork(locale: Locale, slug: string): Promise<FeaturedWork | null> {
+  const entry = await reader.collections.catalogue_works.read(slug);
+  if (!entry || !entry.image) return null;
+  return {
+    image: catalogueImageUrl(entry.image),
+    artist: entry.artist,
+    title: entry.title,
+    date: entry.date,
+    medium: entry.medium,
+    caption: entry[CAPTION_FIELD[locale]],
+  };
+}
+
 export async function getHomeContent(locale: Locale): Promise<HomeContent> {
   const key = `home_${locale}` as keyof typeof reader.singletons;
   const entry = (await reader.singletons[key].read()) as HomeContent | null;
@@ -80,7 +117,7 @@ export async function getCatalogueWorks(locale: Locale): Promise<CatalogueWork[]
       artist: entry.artist,
       date: entry.date,
       medium: entry.medium,
-      image: entry.image ?? '',
+      image: catalogueImageUrl(entry.image),
       tags: [...entry.tags],
       caption: entry[captionField],
       sourceCitation: entry.sourceCitation,
