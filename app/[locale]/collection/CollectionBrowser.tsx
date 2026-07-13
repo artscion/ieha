@@ -9,7 +9,7 @@ export function CollectionBrowser({ works }: { works: CatalogueWork[] }) {
 
   return (
     <main id="main-content" className="mx-auto max-w-[1100px] px-6 py-16 sm:px-10">
-      <h1 className="text-balance font-serif text-4xl text-ink">Collection</h1>
+      <h1 className="text-balance font-sans text-[clamp(1.75rem,1.3rem+1.8vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.02em] text-ink">Collection</h1>
       <div className="mt-8 max-w-xs">
         <CatalogueFilter works={works} onFilteredChange={setFiltered} />
       </div>

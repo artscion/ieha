@@ -1,23 +1,27 @@
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { Newsreader, Inter } from 'next/font/google';
+import { Golos_Text, Spectral } from 'next/font/google';
 import { routing } from '@/i18n/routing';
 import { Nav } from '@/components/Nav';
 import { Footer } from '@/components/Footer';
 import type { Locale } from '@/lib/content';
 import '../globals.css';
 
-const newsreader = Newsreader({
-  subsets: ['latin'],
-  style: ['normal', 'italic'],
-  variable: '--font-newsreader',
+// Golos Text (ParaType grotesque, full Cyrillic) carries display + labels;
+// Spectral (scholarly serif w/ italic + Cyrillic) carries reading body + the
+// Latin motto. Both self-hosted; cyrillic subset serves the Russian locale.
+const golos = Golos_Text({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-golos',
   display: 'swap',
 });
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
+const spectral = Spectral({
+  subsets: ['latin', 'cyrillic'],
+  weight: ['400', '500'],
+  style: ['normal', 'italic'],
+  variable: '--font-spectral',
   display: 'swap',
 });
 
@@ -46,7 +50,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   return (
-    <html lang={locale} className={`${newsreader.variable} ${inter.variable}`}>
+    <html lang={locale} className={`${golos.variable} ${spectral.variable}`}>
       <body className="bg-cream text-ink font-serif antialiased">
         <NextIntlClientProvider>
           <a

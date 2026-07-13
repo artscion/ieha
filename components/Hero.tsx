@@ -21,7 +21,9 @@ export function Hero({ content }: { content: HomeContent }) {
     <main id="main-content" className="mx-auto flex max-w-[1100px] flex-col gap-10 px-6 py-14 sm:px-10 md:flex-row md:items-center">
       <div className="flex-[1.3]">
         <p className="font-sans text-xs uppercase tracking-widest text-forest">{content.eyebrow}</p>
-        <h1 className="mt-4 text-balance font-serif text-4xl leading-tight text-ink md:text-[34px]">{content.headline}</h1>
+        <h1 className="mt-4 text-balance font-sans text-[clamp(2rem,1.2rem+2.8vw,3.25rem)] font-semibold leading-[1.08] tracking-[-0.02em] text-ink">
+          {content.headline}
+        </h1>
         <p className="mt-5 max-w-[420px] font-serif text-base leading-relaxed text-ink-soft">
           {renderSubhead(content.subhead)}
         </p>

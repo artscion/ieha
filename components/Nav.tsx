@@ -59,7 +59,7 @@ export function Nav({ locale }: { locale: Locale }) {
     <nav className="border-b border-border">
       <div className="flex items-center justify-between px-6 py-5 lg:px-10">
         <Link href="/" className="block" onClick={() => setOpen(false)}>
-          <span className="font-serif italic text-base text-ink">IEHA</span>
+          <span className="font-sans text-lg font-semibold tracking-tight text-ink">IEHA</span>
           <span className="block font-sans text-[9px] tracking-wide text-label">
             European Institute of Avant-Garde Heritage
           </span>
