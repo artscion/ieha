@@ -1813,7 +1813,7 @@ git commit -m "feat: Contact page (4-locale content, draft translations)"
 ### Task 11: Catalogue content curation (draft, review-gated)
 
 **Files:**
-- Create: `content/catalogue/{work-slug}/index.yaml` (~10 entries), `public/catalogue/*.jpg`
+- Create: `content/catalogue/{work-slug}.yaml` (~10 entries, flat files — no subdirectory; see note below), `public/catalogue/*.jpg`
 
 **Interfaces:**
 - Consumes: `keystatic.config.ts`'s `catalogue_works` collection schema (Task 3).
@@ -1842,8 +1842,10 @@ Repeat for each selected work. Keep filenames lowercase-kebab-case matching the 
 
 - [ ] **Step 4: Write one content entry per work, reviewStatus: draft**
 
+**File layout is flat, not folder+index.yaml.** Unlike the page singletons (Task 3), the `catalogue_works` collection is configured with `path: 'content/catalogue/*'` — no trailing slash — which Keystatic resolves to flat-file storage (`content/catalogue/<slug>.yaml`), not a directory per entry. Verify against `reader.collections.catalogue_works.list()` if in doubt; a directory+index.yaml layout will silently return zero entries.
+
 ```yaml
-# content/catalogue/<work-slug>/index.yaml
+# content/catalogue/<work-slug>.yaml
 title: <best-available title, or "Untitled" if none found>
 artist: <artist name as found in source>
 date: <date or period, or "date undetermined" if unknown>
