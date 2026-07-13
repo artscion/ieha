@@ -20,12 +20,12 @@ export function CatalogueFilter({
 
   return (
     <label className="block">
-      <span className="text-sm font-medium">Filter by artist</span>
+      <span className="font-sans text-xs uppercase tracking-wide text-label">Filter by artist</span>
       <select
         aria-label="Filter by artist"
         value={artist}
         onChange={(e) => handleChange(e.target.value)}
-        className="mt-1 block"
+        className="mt-1 block border-b border-border bg-transparent font-serif text-ink focus:border-forest focus:outline-none"
       >
         <option value="">All artists</option>
         {artists.map((a) => (
