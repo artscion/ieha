@@ -9,9 +9,9 @@ const FOOTER_TEXT: Record<Locale, string> = {
 
 export function Footer({ locale }: { locale: Locale }) {
   return (
-    <footer className="mt-24 border-t px-6 py-8 text-sm text-neutral-500">
-      <p>{FOOTER_TEXT[locale]}</p>
-      <p>info@ieha.org</p>
+    <footer className="mt-24 border-t border-border px-10 py-8">
+      <p className="font-serif italic text-sm text-ink-soft">{FOOTER_TEXT[locale]}</p>
+      <p className="mt-1 font-sans text-xs text-label">info@ieha.org</p>
     </footer>
   );
 }
