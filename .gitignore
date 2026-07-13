@@ -11,3 +11,7 @@ deno.lock
 
 # Scratch coordination files (task briefs/reports/reviews, brainstorm mockups)
 .superpowers/
+
+# Next.js / TypeScript generated build artifacts
+next-env.d.ts
+*.tsbuildinfo
