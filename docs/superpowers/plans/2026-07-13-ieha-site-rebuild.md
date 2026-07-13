@@ -298,9 +298,11 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const requested = await requestLocale;
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
 
-  return { locale };
+  return { locale, messages: {} };
 });
 ```
+
+`messages: {}` is required — `<NextIntlClientProvider>` (used without an explicit `messages` prop in `app/[locale]/layout.tsx`) calls `getMessages()` internally, which throws `Error: No messages found` if this config doesn't return a `messages` key at all. An empty object is correct here: this project has no next-intl message catalog — page copy comes from `lib/content.ts`/Keystatic, not `next-intl`'s translation system. (Found during Task 2: this bug was masked at first because dynamic rendering deferred the error to request time; it surfaced once `setRequestLocale` enabled static rendering.)
 
 - [ ] **Step 8: Create proxy.ts (Next.js 16's renamed middleware.ts)**
 
