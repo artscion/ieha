@@ -11,6 +11,6 @@ describe('routing config', () => {
   });
 
   it('uses as-needed prefixing so the default locale is unprefixed', () => {
-    expect(routing.localePrefix.mode).toBe('as-needed');
+    expect(routing.localePrefix).toEqual({ mode: 'as-needed' });
   });
 });

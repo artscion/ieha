@@ -30,7 +30,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider>
           <Nav locale={locale as Locale} />
           {children}
-          <Footer />
+          <Footer locale={locale as Locale} />
         </NextIntlClientProvider>
       </body>
     </html>
