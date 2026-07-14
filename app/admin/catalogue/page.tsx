@@ -23,21 +23,20 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function AdminCataloguePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ branch?: string }>;
-}) {
-  const params = await searchParams;
+// Bake catalogue entries into the page at build time. On Netlify, dynamic
+// serverless invocations do not reliably include content/catalogue in the
+// function bundle, which previously produced an empty list.
+export const dynamic = 'force-static';
+
+export default async function AdminCataloguePage() {
   const works = await listCatalogueAdminWorks();
-  const branch = params.branch?.trim() || process.env.KEYSTATIC_BRANCH || 'feat/site-rebuild';
 
   return (
     <html lang="en" className={`${golos.variable} ${spectral.variable}`}>
       <body className="bg-cream text-ink font-serif antialiased">
         <main id="main-content">
           <Suspense fallback={<p className="p-10 font-sans text-sm text-label">Loading catalogue…</p>}>
-            <CatalogueAdminBrowser works={works} branch={branch} />
+            <CatalogueAdminBrowser works={works} />
           </Suspense>
         </main>
       </body>
