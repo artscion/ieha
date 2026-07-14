@@ -17,17 +17,21 @@ Standard commands live in `package.json` (`dev`, `build`, `start`, `test`).
 There is no `lint` script; run `npx tsc --noEmit` for type checking.
 
 Non-obvious caveats:
-- **Use `npm run dev` for local development.** `npm run build` fails in this
-  environment with "Missing required config in Keystatic API setup when using
-  the 'github' storage mode" — the `/api/keystatic/[...params]` route needs the
-  GitHub OAuth env vars (`KEYSTATIC_GITHUB_CLIENT_ID`,
-  `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET`, and in production
-  `KEYSTATIC_URL`) at page-data collection time. These are configured on Netlify
-  for production builds. The public site itself renders fine without them because
-  it reads content from the local filesystem, so `next dev` and all public routes
-  work with no secrets.
-- The Keystatic admin UI at `/keystatic` also requires those GitHub OAuth vars to
-  authenticate and edit content; browsing/testing the public site does not.
+- **Keystatic env vars** (needed for `npm run build` and the `/keystatic` admin;
+  not needed to browse the public site under `next dev`):
+  - `KEYSTATIC_GITHUB_CLIENT_ID` / `KEYSTATIC_GITHUB_CLIENT_SECRET` — GitHub App
+    OAuth credentials.
+  - `KEYSTATIC_SECRET` — a **random** session-signing string you generate (e.g.
+    `openssl rand -base64 32`). It must **not** be a GitHub `SHA256:…` fingerprint.
+  - `KEYSTATIC_URL` — production site **origin only**: `https://ieha.fr`. Used by
+    `pinOrigin` in `app/api/keystatic/[...params]/route.ts` so OAuth
+    `redirect_uri` is not a Netlify deploy subdomain. Do **not** include
+    `/keystatic` in the path. For local `next dev`, leave this **unset** so
+    callbacks stay on `http://localhost:3000`; if it is set while running on
+    localhost, Keystatic can emit a broken `https://ieha.fr:3000/...` redirect.
+- Without the three required Keystatic secrets, `npm run build` fails at page-data
+  collection for `/api/keystatic/[...params]`; `next dev` and public routes still
+  work because content is read from the local filesystem.
 - The `/[locale]/collection` listing only shows catalogue works with
   `reviewStatus: approved` (see `getCatalogueWorks` in `lib/content.ts`).
   Currently every entry in `content/catalogue/*.yaml` is `draft`, so the
