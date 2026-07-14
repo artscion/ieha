@@ -1,4 +1,8 @@
 import { config, fields, singleton, collection } from '@keystatic/core';
+import {
+  catalogueImageField,
+  catalogueImageSourceUrlField,
+} from './lib/keystatic/catalogue-image-field';
 
 const LOCALES = ['fr', 'en', 'ru', 'de'] as const;
 const PAGE_SLUGS = ['about', 'methodology', 'research', 'programs', 'contact'] as const;
@@ -48,6 +52,34 @@ export default config({
     kind: 'github',
     repo: 'artscion/ieha',
   },
+  ui: {
+    navigation: {
+      Catalogue: ['catalogue_works'],
+      'Home pages': ['home_fr', 'home_en', 'home_ru', 'home_de'],
+      Content: [
+        'about_fr',
+        'about_en',
+        'about_ru',
+        'about_de',
+        'methodology_fr',
+        'methodology_en',
+        'methodology_ru',
+        'methodology_de',
+        'research_fr',
+        'research_en',
+        'research_ru',
+        'research_de',
+        'programs_fr',
+        'programs_en',
+        'programs_ru',
+        'programs_de',
+        'contact_fr',
+        'contact_en',
+        'contact_ru',
+        'contact_de',
+      ],
+    },
+  },
   singletons: {
     ...homeSingletons,
     ...proseSingletons,
@@ -57,12 +89,19 @@ export default config({
       label: 'Catalogue works',
       slugField: 'title',
       path: 'content/catalogue/*',
+      columns: ['title', 'artist', 'date'],
       schema: {
         title: fields.slug({ name: { label: 'Title' } }),
         artist: fields.text({ label: 'Artist' }),
         date: fields.text({ label: 'Date / period' }),
         medium: fields.text({ label: 'Medium' }),
-        image: fields.image({ label: 'Image', directory: 'public/catalogue', publicPath: '/catalogue/' }),
+        image: catalogueImageField({
+          label: 'Image (upload)',
+          description: 'Upload a file, or use Import from URL below. Stored in the repository.',
+          directory: 'public/catalogue',
+          publicPath: '/catalogue/',
+        }),
+        imageSourceUrl: catalogueImageSourceUrlField(),
         tags: fields.array(fields.text({ label: 'Tag' }), { label: 'Tags', itemLabel: (props) => props.value }),
         sourceCitation: fields.text({ label: 'Source citation (which CATALOGUE_AVANTGARDE file this came from)' }),
         reviewStatus: fields.select({
