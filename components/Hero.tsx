@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import type { FeaturedWork, HomeContent } from '@/lib/content';
+import type { HeroSlide, HomeContent } from '@/lib/content';
+import { HeroSlideshow } from './HeroSlideshow';
 
 const LATIN_PHRASE = 'sine ira et studio';
 
@@ -19,46 +19,26 @@ function renderSubhead(subhead: string) {
 
 export function Hero({
   content,
-  featured,
-  imageWidth,
-  imageHeight,
+  slides,
 }: {
   content: HomeContent;
-  featured?: FeaturedWork | null;
-  imageWidth?: number;
-  imageHeight?: number;
+  slides: HeroSlide[];
 }) {
   return (
-    <main
-      id="main-content"
-      className="mx-auto flex max-w-[1100px] flex-col gap-12 px-6 py-14 sm:px-10 md:flex-row md:items-center md:gap-16"
-    >
-      <div className="md:flex-[1.15]">
-        <p className="font-sans text-xs uppercase tracking-widest text-forest">{content.eyebrow}</p>
-        <h1 className="mt-4 text-balance font-sans text-[clamp(2rem,1.2rem+2.8vw,3.25rem)] font-semibold leading-[1.08] tracking-[-0.02em] text-ink">
-          {content.headline}
-        </h1>
-        <p className="mt-5 max-w-[440px] font-serif text-base leading-relaxed text-ink-soft">
-          {renderSubhead(content.subhead)}
-        </p>
-      </div>
+    <main id="main-content" className="relative isolate min-h-[min(88vh,900px)] overflow-hidden">
+      <HeroSlideshow slides={slides} />
 
-      {featured?.image && imageWidth && imageHeight ? (
-        <figure className="mx-auto w-full max-w-[260px] md:mx-0 md:max-w-[320px] md:flex-none">
-          <Image
-            src={featured.image}
-            alt={`${featured.artist} — ${featured.title}, ${featured.medium}`}
-            width={imageWidth}
-            height={imageHeight}
-            sizes="(min-width: 768px) 320px, 260px"
-            priority
-            className="h-auto w-full"
-          />
-          <figcaption className="mt-4 border-t border-border pt-3 font-sans text-[11px] uppercase tracking-wide text-label">
-            {featured.artist} · <span className="text-ink-soft">{featured.title}</span>, {featured.date}
-          </figcaption>
-        </figure>
-      ) : null}
+      <div className="relative z-10 mx-auto flex min-h-[min(88vh,900px)] max-w-[1100px] flex-col justify-center px-6 py-20 sm:px-10">
+        <div className="max-w-[34rem]">
+          <p className="font-sans text-xs uppercase tracking-widest text-cream/75">{content.eyebrow}</p>
+          <h1 className="mt-4 text-balance font-sans text-[clamp(2rem,1.2rem+2.8vw,3.25rem)] font-semibold leading-[1.08] tracking-[-0.02em] text-cream">
+            {content.headline}
+          </h1>
+          <p className="mt-5 max-w-[440px] font-serif text-base leading-relaxed text-cream/85">
+            {renderSubhead(content.subhead)}
+          </p>
+        </div>
+      </div>
     </main>
   );
 }
