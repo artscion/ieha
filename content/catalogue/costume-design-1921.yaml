@@ -3,7 +3,7 @@ artist: Pavel Tchelitchew
 date: '1921'
 medium: Watercolor and pencil on paper
 image: /catalogue/costume-design-1921/image.jpg
-showInHero: false
+showInHero: true
 tags:
   - Russian Avant-Garde
   - Theatrical Design
