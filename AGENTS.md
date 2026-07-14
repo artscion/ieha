@@ -32,6 +32,16 @@ Non-obvious caveats:
 - Without the three required Keystatic secrets, `npm run build` fails at page-data
   collection for `/api/keystatic/[...params]`; `next dev` and public routes still
   work because content is read from the local filesystem.
+- **Production `/keystatic` “Authorization failed”:** that message is Keystatic’s
+  opaque wrapper around a failed GitHub **token exchange** (HTTP 200 error JSON
+  or a token response missing `refresh_token`/`expires_in`). Authorize can still
+  succeed because it only uses the Client ID. Fix on **Netlify** (Cursor cloud
+  secrets do not update Netlify): matching `KEYSTATIC_GITHUB_CLIENT_*`,
+  `KEYSTATIC_SECRET`, `KEYSTATIC_URL=https://ieha.fr`, plus
+  `NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=ieha-keystatic`. On the GitHub App
+  (`ieha-keystatic`), enable **Expire user authorization tokens**, and register
+  callback `https://ieha.fr/api/keystatic/github/oauth/callback`. OAuth codes are
+  single-use — never reload the callback URL; restart from `/keystatic`.
 - The `/[locale]/collection` listing only shows catalogue works with
   `reviewStatus: approved` (see `getCatalogueWorks` in `lib/content.ts`).
   Currently every entry in `content/catalogue/*.yaml` is `draft`, so the
