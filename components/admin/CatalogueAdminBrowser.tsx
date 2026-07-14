@@ -24,24 +24,20 @@ const SORT_OPTIONS: { value: CatalogueSort; label: string }[] = [
   { value: 'year-desc', label: 'Year: newest first' },
 ];
 
-function editorHref(slug: string, branch: string | null): string {
-  if (branch) {
-    return `/keystatic/branch/${encodeURIComponent(branch)}/collection/catalogue_works/item/${encodeURIComponent(slug)}`;
-  }
-  return `/keystatic/collection/catalogue_works/item/${encodeURIComponent(slug)}`;
+function editorHref(slug: string, branch: string): string {
+  return `/keystatic/branch/${encodeURIComponent(branch)}/collection/catalogue_works/item/${encodeURIComponent(slug)}`;
 }
 
-export function CatalogueAdminBrowser({
-  works,
-  branch,
-}: {
-  works: CatalogueAdminWork[];
-  branch: string | null;
-}) {
+export function CatalogueAdminBrowser({ works }: { works: CatalogueAdminWork[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
+
+  const branch =
+    searchParams.get('branch')?.trim() ||
+    process.env.NEXT_PUBLIC_KEYSTATIC_BRANCH ||
+    'feat/site-rebuild';
 
   const state = useMemo(
     () => parseCatalogueQuery(new URLSearchParams(searchParams.toString())),
@@ -189,7 +185,7 @@ function WorkTable({
   hideArtist = false,
 }: {
   works: CatalogueAdminWork[];
-  branch: string | null;
+  branch: string;
   hideArtist?: boolean;
 }) {
   return (
