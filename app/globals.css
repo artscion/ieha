@@ -13,3 +13,28 @@
   --font-serif: var(--font-spectral);
   --font-sans: var(--font-golos);
 }
+
+@keyframes hero-kenburns-a {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.04) translate(-1.4%, -0.8%);
+  }
+}
+
+@keyframes hero-kenburns-b {
+  from {
+    transform: scale(1.03) translate(1.2%, 0.6%);
+  }
+  to {
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-kenburns-a,
+  .hero-kenburns-b {
+    animation: none !important;
+  }
+}

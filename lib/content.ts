@@ -1,7 +1,10 @@
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../keystatic.config';
+import { selectHeroSlides, type HeroSlide } from './hero-slides';
 
 const reader = createReader(process.cwd(), keystaticConfig);
+
+export type { HeroSlide };
 
 export type Locale = 'fr' | 'en' | 'ru' | 'de';
 export type PageSlug = 'about' | 'methodology' | 'research' | 'programs' | 'contact';
@@ -41,7 +44,7 @@ const CAPTION_FIELD: Record<Locale, 'caption_fr' | 'caption_en' | 'caption_ru' |
 // (e.g. "work.jpg"), not the served URL. Prepend the field's configured
 // publicPath ('/catalogue/') so it resolves as a static asset.
 const CATALOGUE_PUBLIC_PATH = '/catalogue/';
-function catalogueImageUrl(image: string | null | undefined): string {
+export function catalogueImageUrl(image: string | null | undefined): string {
   if (!image) return '';
   if (image.startsWith('/') || image.startsWith('http')) return image;
   return `${CATALOGUE_PUBLIC_PATH}${image}`;
@@ -123,4 +126,28 @@ export async function getCatalogueWorks(locale: Locale): Promise<CatalogueWork[]
       sourceCitation: entry.sourceCitation,
     }))
     .sort((a, b) => a.title.localeCompare(b.title));
+}
+
+/** Homepage hero slideshow slides from catalogue_works (local images only). */
+export async function getHeroSlides(_locale: Locale): Promise<HeroSlide[]> {
+  const slugs = await reader.collections.catalogue_works.list();
+  const entries = await Promise.all(
+    slugs.map(async (slug) => {
+      const entry = await reader.collections.catalogue_works.read(slug);
+      if (!entry) return null;
+      return {
+        slug,
+        title: entry.title,
+        artist: entry.artist,
+        date: entry.date,
+        image: entry.image,
+        reviewStatus: entry.reviewStatus,
+        showInHero: entry.showInHero ?? false,
+      };
+    })
+  );
+
+  const candidates = entries.filter((e): e is NonNullable<typeof e> => e !== null);
+  // No public per-work route yet — caption stays unlinked.
+  return selectHeroSlides(candidates, catalogueImageUrl);
 }

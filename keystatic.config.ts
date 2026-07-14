@@ -102,6 +102,11 @@ export default config({
           publicPath: '/catalogue/',
         }),
         imageSourceUrl: catalogueImageSourceUrlField(),
+        showInHero: fields.checkbox({
+          label: 'Show in homepage hero',
+          description: 'Include this artwork in the slow slideshow on the homepage.',
+          defaultValue: false,
+        }),
         tags: fields.array(fields.text({ label: 'Tag' }), { label: 'Tags', itemLabel: (props) => props.value }),
         sourceCitation: fields.text({ label: 'Source citation (which CATALOGUE_AVANTGARDE file this came from)' }),
         reviewStatus: fields.select({
