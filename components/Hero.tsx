@@ -53,6 +53,7 @@ export function Hero({
             sizes="(min-width: 768px) 320px, 260px"
             priority
             className="h-auto w-full"
+            unoptimized={featured.image.startsWith('http')}
           />
           <figcaption className="mt-4 border-t border-border pt-3 font-sans text-[11px] uppercase tracking-wide text-label">
             {featured.artist} · <span className="text-ink-soft">{featured.title}</span>, {featured.date}

@@ -40,11 +40,18 @@ const CAPTION_FIELD: Record<Locale, 'caption_fr' | 'caption_en' | 'caption_ru' |
 // Keystatic's reader returns the bare stored filename for an image field
 // (e.g. "work.jpg"), not the served URL. Prepend the field's configured
 // publicPath ('/catalogue/') so it resolves as a static asset.
+// Editors can also supply an external imageUrl; the uploaded file takes
+// precedence when both are set.
 const CATALOGUE_PUBLIC_PATH = '/catalogue/';
-function catalogueImageUrl(image: string | null | undefined): string {
-  if (!image) return '';
-  if (image.startsWith('/') || image.startsWith('http')) return image;
-  return `${CATALOGUE_PUBLIC_PATH}${image}`;
+function catalogueImageUrl(
+  image: string | null | undefined,
+  imageUrl?: string | null
+): string {
+  if (image) {
+    if (image.startsWith('/') || image.startsWith('http')) return image;
+    return `${CATALOGUE_PUBLIC_PATH}${image}`;
+  }
+  return imageUrl ?? '';
 }
 
 export type FeaturedWork = {
@@ -63,9 +70,11 @@ export type FeaturedWork = {
 // degrades to text-only rather than throwing.
 export async function getFeaturedWork(locale: Locale, slug: string): Promise<FeaturedWork | null> {
   const entry = await reader.collections.catalogue_works.read(slug);
-  if (!entry || !entry.image) return null;
+  if (!entry) return null;
+  const image = catalogueImageUrl(entry.image, entry.imageUrl);
+  if (!image) return null;
   return {
-    image: catalogueImageUrl(entry.image),
+    image,
     artist: entry.artist,
     title: entry.title,
     date: entry.date,
@@ -117,7 +126,7 @@ export async function getCatalogueWorks(locale: Locale): Promise<CatalogueWork[]
       artist: entry.artist,
       date: entry.date,
       medium: entry.medium,
-      image: catalogueImageUrl(entry.image),
+      image: catalogueImageUrl(entry.image, entry.imageUrl),
       tags: [...entry.tags],
       caption: entry[captionField],
       sourceCitation: entry.sourceCitation,

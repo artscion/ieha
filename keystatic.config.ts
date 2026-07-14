@@ -62,7 +62,17 @@ export default config({
         artist: fields.text({ label: 'Artist' }),
         date: fields.text({ label: 'Date / period' }),
         medium: fields.text({ label: 'Medium' }),
-        image: fields.image({ label: 'Image', directory: 'public/catalogue', publicPath: '/catalogue/' }),
+        image: fields.image({
+          label: 'Image (upload)',
+          description: 'Upload an image file into the repository.',
+          directory: 'public/catalogue',
+          publicPath: '/catalogue/',
+        }),
+        imageUrl: fields.url({
+          label: 'Image URL',
+          description:
+            'Or paste a link to an image hosted elsewhere. Used when no file is uploaded; otherwise the uploaded file wins.',
+        }),
         tags: fields.array(fields.text({ label: 'Tag' }), { label: 'Tags', itemLabel: (props) => props.value }),
         sourceCitation: fields.text({ label: 'Source citation (which CATALOGUE_AVANTGARDE file this came from)' }),
         reviewStatus: fields.select({
